@@ -1,8 +1,12 @@
 //по клику esc
-export function handleEscClose (evt) {
-    if ((evt.key === 'Escape') && (document.querySelector('.popup_is-opened'))) { 
-    const popupOpened = document.querySelector('.popup_is-opened');
-    closeModal(popupOpened) } }
+export function handleEscClose(evt) {
+    if (evt.key === 'Escape') {
+      const popupOpened = document.querySelector('.popup_is-opened');
+      if (popupOpened) {
+        closeModal(popupOpened);
+      }
+    }
+  }
   
   //открытие попапа
   export function openModal(popup) {
@@ -16,14 +20,9 @@ export function handleEscClose (evt) {
     document.removeEventListener('keydown', handleEscClose);
   }
   
-  export function setupPopupCloseListeners() {
-    // Находим все попапы на странице
-    const popups = document.querySelectorAll('.popup');
-    
-    // Для каждого попапа добавляем обработчик события
+  export function setupPopupCloseListeners(popups) {
     popups.forEach((popup) => {
       popup.addEventListener('mousedown', (evt) => {
-        // Проверяем, что клик был по оверлею (самому попапу) или по кнопке закрытия
         if (evt.target.classList.contains('popup') || evt.target.classList.contains('popup__close')) {
           closeModal(popup);
         }
@@ -31,9 +30,7 @@ export function handleEscClose (evt) {
     });
   }
   
-  export function setupAnimation() {
-    const popups = document.querySelectorAll('.popup');
-    
+  export function setupAnimation(popups) {
     popups.forEach((popup) => {
       popup.classList.add('popup_is-animated');
     });

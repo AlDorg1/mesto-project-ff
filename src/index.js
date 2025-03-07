@@ -1,6 +1,7 @@
 import './pages/index.css';
 import { initialCards } from './cards.js';
 import { openModal, closeModal, setupPopupCloseListeners, setupAnimation } from './components/modals.js';
+import { createCard, handleDelete, handleLike } from './components/card.js';
 const popupAdd = document.querySelector(".popup_type_new-card");
 const buttonAdd = document.querySelector(".profile__add-button");
 const inputName = document.querySelector('.popup__input_type_name');
@@ -17,54 +18,20 @@ const formAdd = document.querySelector('.popup__form[name="new-place"]');
 const popupImage = document.querySelector('.popup_type_image');
 const imageOfPopup = document.querySelector('.popup__image');
 const captionOfPopup = document.querySelector('.popup__caption');
-
+const popups = document.querySelectorAll('.popup');
 
 function init() {
-  setupPopupCloseListeners();
-  setupAnimation();
+  setupPopupCloseListeners(popups);
+  setupAnimation(popups);
 }
 init();
 
-// @todo: Темплейт карточки
+// Темплейт карточки
 const cardTemplate = document.querySelector("#card-template");
 
-// @todo: Функция создания карточки
-function createCard(cardData, handleDelete, handleLike) {
-  const cardElement = cardTemplate.content
-    .querySelector(".places__item")
-    .cloneNode(true);
-  const cardImage = cardElement.querySelector(".card__image");
-  const cardTitle = cardElement.querySelector(".card__title");
-  const deleteButton = cardElement.querySelector(".card__delete-button");
-  const likeButton = cardElement.querySelector(".card__like-button");
-
-  cardImage.src = cardData.link;
-  cardImage.alt = cardData.name;
-  cardTitle.textContent = cardData.name;
-
-  deleteButton.addEventListener("click", function () {
-    handleDelete(cardElement);
-  });
-  
-  likeButton.addEventListener("click", function() {
-    handleLike(likeButton);
-  });
-  
-  cardImage.addEventListener('click', function () {
-    handleImageClick(cardData.link, cardData.name);
-  });
-
-  return cardElement;
-}
-
-// @todo: Функция удаления карточки
-function handleDelete(card) {
-  card.remove();
-}
-
-// @todo: Вывести карточки на страницу
+// Вывести карточки на страницу
 initialCards.forEach(function (item) {
-  const card = createCard(item, handleDelete, handleLike);
+  const card = createCard(item, handleDelete, handleLike, handleImageClick);
   cardsContainer.append(card);
 });
 
@@ -99,7 +66,7 @@ formAdd.addEventListener('submit', function (evt) {
   };
 
   // Создаем новую карточку и добавляем в контейнер
-  const newCard = createCard(cardData, handleDelete, handleLike);
+  const newCard = createCard(cardData, handleDelete, handleLike, handleImageClick);
   cardsContainer.prepend(newCard); // добавляем в начало списка
 
   // Закрываем попап и сбрасываем форму
@@ -112,8 +79,4 @@ function handleImageClick(link, name) {
   imageOfPopup.alt = name;
   captionOfPopup.textContent = name;
   openModal(popupImage);
-}
-
-function handleLike(likeButton) {
-  likeButton.classList.toggle('card__like-button_is-active');
 }
